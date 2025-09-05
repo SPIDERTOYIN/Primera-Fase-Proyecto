@@ -83,7 +83,7 @@ def mostrar_asistencia():
     for r in registros:
         print(f"{r[0]:<5}{r[1]:<20}{r[2]:<12}{r[3]:<10}{r[4] if r[4] else '---':<10}")
 
-print("🚪 Sistema de asistencia activo. (Escribe 'reporte' para ver registros o 'salir' para apagar)\n")
+print("🚪 Sistema de asistencia activo. (Escribe 'salir' para apagar)\n")
 
 while True:
     clave = input("👉 Coloca tu huella digital: ")
@@ -91,9 +91,6 @@ while True:
     if clave.lower() == "salir":
         print("🔴 Sistema apagado.")
         break
-    elif clave.lower() == "reporte":
-        mostrar_asistencia()
-        continue
 
     empleado = identificar_empleado(clave)
     if empleado:
@@ -102,4 +99,5 @@ while True:
         print("➡", mensaje)
     else:
         print("❌ Huella no reconocida.")
+
 
