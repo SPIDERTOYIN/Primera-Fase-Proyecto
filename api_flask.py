@@ -3,6 +3,7 @@ import sqlite3
 
 app = Flask(__name__)
 
+#Plantilla para la tabla en Web
 HTML_PLANTILLA = """
 <!doctype html>
 <html>
@@ -38,7 +39,7 @@ HTML_PLANTILLA = """
 </body>
 </html>
 """
-
+#Servidor Flask
 @app.route("/")
 def ver_asistencia():
     conn = sqlite3.connect("asistencia.db")
@@ -52,7 +53,8 @@ def ver_asistencia():
     registros = cursor.fetchall()
     conn.close()
     return render_template_string(HTML_PLANTILLA, registros=registros)
-
+#Iniciar servidor
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
+
 
