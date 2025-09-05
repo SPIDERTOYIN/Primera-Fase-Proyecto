@@ -1,14 +1,9 @@
-# sistema_asistencia.py
 import sqlite3
 from datetime import datetime, timedelta
 
-# -----------------------
-# BASE DE DATOS
-# -----------------------
 conexion = sqlite3.connect("asistencia.db")
 cursor = conexion.cursor()
 
-# Tabla de empleados
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS empleados (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -17,7 +12,6 @@ CREATE TABLE IF NOT EXISTS empleados (
 )
 """)
 
-# Tabla de asistencia
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS asistencia (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -30,9 +24,6 @@ CREATE TABLE IF NOT EXISTS asistencia (
 """)
 conexion.commit()
 
-# -----------------------
-# EMPLEADOS SIMULADOS
-# -----------------------
 empleados = [
     ("Juan Pérez", "1010"),
     ("María López", "2020"),
@@ -50,9 +41,6 @@ for nombre, clave in empleados:
     cursor.execute("INSERT OR IGNORE INTO empleados (nombre, clave_huella) VALUES (?,?)", (nombre, clave))
 conexion.commit()
 
-# -----------------------
-# FUNCIONES
-# -----------------------
 def identificar_empleado(clave):
     cursor.execute("SELECT id, nombre FROM empleados WHERE clave_huella=?", (clave,))
     return cursor.fetchone()
@@ -60,8 +48,6 @@ def identificar_empleado(clave):
 def checar_asistencia(empleado_id):
     fecha = datetime.now().date()
     hora_actual = datetime.now().strftime("%H:%M:%S")
-
-    # Obtener el último registro de hoy
     cursor.execute("""
         SELECT * FROM asistencia 
         WHERE empleado_id=? AND fecha=? 
@@ -70,13 +56,11 @@ def checar_asistencia(empleado_id):
     registro = cursor.fetchone()
 
     if registro is None or registro[4] is not None:
-        # Registrar nueva entrada
         cursor.execute("INSERT INTO asistencia (empleado_id, fecha, hora_entrada) VALUES (?,?,?)",
                        (empleado_id, fecha, hora_actual))
         conexion.commit()
         return "✅ Entrada registrada"
     elif registro[4] is None:
-        # Registrar salida
         hora_entrada = datetime.strptime(registro[3], "%H:%M:%S")
         hora_actual_dt = datetime.strptime(hora_actual, "%H:%M:%S")
         if hora_actual_dt - hora_entrada < timedelta(minutes=5):
@@ -99,9 +83,6 @@ def mostrar_asistencia():
     for r in registros:
         print(f"{r[0]:<5}{r[1]:<20}{r[2]:<12}{r[3]:<10}{r[4] if r[4] else '---':<10}")
 
-# -----------------------
-# SISTEMA SIEMPRE DISPONIBLE
-# -----------------------
 print("🚪 Sistema de asistencia activo. (Escribe 'reporte' para ver registros o 'salir' para apagar)\n")
 
 while True:
@@ -121,3 +102,4 @@ while True:
         print("➡", mensaje)
     else:
         print("❌ Huella no reconocida.")
+
