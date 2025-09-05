@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 conexion = sqlite3.connect("asistencia.db")
 cursor = conexion.cursor()
 
+#Crear Tabla
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS empleados (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -24,6 +25,7 @@ CREATE TABLE IF NOT EXISTS asistencia (
 """)
 conexion.commit()
 
+#Empleados Ficticios
 empleados = [
     ("Juan Pérez", "1010"),
     ("María López", "2020"),
@@ -68,7 +70,7 @@ def checar_asistencia(empleado_id):
         cursor.execute("UPDATE asistencia SET hora_salida=? WHERE id=?", (hora_actual, registro[0]))
         conexion.commit()
         return "✅ Salida registrada"
-
+#Esta funcion fue solo una prueba, no esta habilitada
 def mostrar_asistencia():
     cursor.execute("""
         SELECT asistencia.id, empleados.nombre, asistencia.fecha, asistencia.hora_entrada, asistencia.hora_salida
@@ -84,7 +86,7 @@ def mostrar_asistencia():
         print(f"{r[0]:<5}{r[1]:<20}{r[2]:<12}{r[3]:<10}{r[4] if r[4] else '---':<10}")
 
 print("🚪 Sistema de asistencia activo. (Escribe 'salir' para apagar)\n")
-
+#Resultado del programa
 while True:
     clave = input("👉 Coloca tu huella digital: ")
 
@@ -99,5 +101,6 @@ while True:
         print("➡", mensaje)
     else:
         print("❌ Huella no reconocida.")
+
 
 
