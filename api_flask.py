@@ -1,4 +1,3 @@
-# api_flask.py (versión con interfaz web)
 from flask import Flask, render_template_string
 import sqlite3
 
@@ -56,3 +55,4 @@ def ver_asistencia():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
+
